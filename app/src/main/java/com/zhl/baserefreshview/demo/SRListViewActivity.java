@@ -1,6 +1,5 @@
 package com.zhl.baserefreshview.demo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,12 +32,8 @@ public class SRListViewActivity extends AppCompatActivity {
         ListView listView = mSwipeRefreshListView.getListView();
 
         PlaceHolderView placeHolderView = new PlaceHolderView(this);
-        final List<String> textList = new ArrayList<>();
-        textList.add("click to show error");
-        textList.add("click to show empty");
-        for (int i = 0; i < 20; i++) {
-            textList.add("test" + i);
-        }
+
+        final List<String> textList = new ArrayList<>(MainActivity.sTextList);
 
         final CommonAdapter<String> adapter = new CommonAdapter<String>(textList) {
             @Override
@@ -63,8 +58,6 @@ public class SRListViewActivity extends AppCompatActivity {
                     mSwipeRefreshListView.showError();
                 } else if (textList.get(i).equals("click to show empty")) {
                     mSwipeRefreshListView.showEmpty();
-                } else {
-                    startActivity(new Intent(SRListViewActivity.this, SRRecyclerViewActivity.class));
                 }
             }
         });
@@ -88,7 +81,7 @@ public class SRListViewActivity extends AppCompatActivity {
                     public void run() {
                         textList.add("test-more");
                         adapter.notifyDataSetChanged();
-                        mSwipeRefreshListView.showList(textList.size() <= 25);
+                        mSwipeRefreshListView.showList(false);
                     }
                 }, 1000);
             }
