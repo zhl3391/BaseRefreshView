@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import com.zhl.baserefreshview.IPlaceHolderView;
 import com.zhl.baserefreshview.ILoadMoreView;
 
-public abstract class BaseSwipeRefreshView extends RelativeLayout implements IBaseSwipeRefreshView{
+public abstract class BaseSwipeRefreshView extends RelativeLayout {
 
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected RefreshListener mRefreshListener;
@@ -38,9 +38,43 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout implements IBa
         init();
     }
 
-    protected abstract void init();
+    protected void init() {
+        this.isInEditMode();
+        mSwipeRefreshLayout = new SwipeRefreshLayout(getContext());
+        this.addView(mSwipeRefreshLayout, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        AbsListView absListView = addAbsListView();
+        if (absListView != null) {
+            absListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    if (!mIsLoading
+                            && mIsHasMore
+                            && view.getCount() == (view.getLastVisiblePosition() + 1)
+                            && scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                        mIsLoading = true;
+                        mIsRefresh = false;
+                        if (mRefreshListener != null){
+                            mRefreshListener.onLoadMore();
+                        }
+                    }
 
-    @Override
+                    if (mOnScrollListener != null) {
+                        mOnScrollListener.onScrollStateChanged(view, scrollState);
+                    }
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    if (mOnScrollListener != null) {
+                        mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+                    }
+                }
+            });
+        }
+    }
+
+    protected abstract AbsListView addAbsListView();
+
     public void setRefreshListener(RefreshListener refreshListener) {
         mRefreshListener = refreshListener;
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -54,19 +88,16 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout implements IBa
         });
     }
 
-    @Override
     public void setRefreshEnable(boolean refreshEnable) {
         mSwipeRefreshLayout.setEnabled(refreshEnable);
     }
 
-    @Override
     public void setRefreshing(boolean isRefreshing) {
         mSwipeRefreshLayout.setRefreshing(isRefreshing);
         mIsLoading = true;
         mIsRefresh = true;
     }
 
-    @Override
     public void setPlaceHolderView(@NonNull IPlaceHolderView placeHolderView) {
         if (mPlaceHolderView != null) {
             this.removeView(mPlaceHolderView.getView());
@@ -75,17 +106,14 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout implements IBa
         this.addView(mPlaceHolderView.getView(),new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     }
 
-    @Override
     public void setOnScrollListener(AbsListView.OnScrollListener onScrollListener) {
         mOnScrollListener = onScrollListener;
     }
 
-    @Override
     public SwipeRefreshLayout getSwipeRefreshLayout() {
         return mSwipeRefreshLayout;
     }
 
-    @Override
     public void showList(boolean isHasMore) {
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setRefreshing(false);
@@ -105,7 +133,6 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout implements IBa
         }
     }
 
-    @Override
     public void showEmpty() {
         mIsLoading = false;
         mSwipeRefreshLayout.setRefreshing(false);
@@ -115,7 +142,6 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout implements IBa
         }
     }
 
-    @Override
     public void showError() {
         if (mIsRefresh) {
             mIsLoading = false;
@@ -131,7 +157,6 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout implements IBa
         }
     }
 
-    @Override
     public void showLoading() {
         mIsLoading = true;
         mSwipeRefreshLayout.setRefreshing(false);
