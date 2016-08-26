@@ -2,6 +2,7 @@ package com.zhl.baserefreshview.refreshView;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -18,17 +19,14 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
 
     public SwipeRefreshRecyclerView(Context context) {
         super(context);
-        init();
     }
 
     public SwipeRefreshRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     public SwipeRefreshRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
     }
 
     protected void init(){
@@ -56,6 +54,22 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
 
     public void setLayoutManager(@NonNull final RecyclerView.LayoutManager layoutManager) {
         mRecyclerView.setLayoutManager(layoutManager);
+        if (layoutManager instanceof GridLayoutManager) {
+            final GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (mAdapter != null && mAdapter.getFooterSize() != 0) {
+                        if (position == mAdapter.getItemCount() - 1) {
+                            return gridLayoutManager.getSpanCount();
+                        } else {
+                            return 1;
+                        }
+                    }
+                    return 1;
+                }
+            });
+        }
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {

@@ -3,6 +3,7 @@ package com.zhl.baserefreshview.demo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
@@ -48,7 +49,8 @@ public class SRRecyclerViewActivity extends AppCompatActivity {
 
         mSrRecyclerView.setPlaceHolderView(placeHolderView);
         mSrRecyclerView.setMoreViewHolder(new LoadMoreViewHolder());
-        mSrRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        mSrRecyclerView.setLayoutManager(gridLayoutManager);
         mSrRecyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new CommonRecyclerAdapter.OnItemClickListener() {
