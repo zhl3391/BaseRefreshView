@@ -81,6 +81,7 @@ public class SRGridViewActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         textList.add("test-more");
+                        textList.add("test-more");
                         adapter.notifyDataSetChanged();
                         mSrGridView.showList(false);
                     }

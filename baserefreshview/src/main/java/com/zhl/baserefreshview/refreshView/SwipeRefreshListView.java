@@ -35,15 +35,6 @@ public class SwipeRefreshListView extends BaseSwipeRefreshView implements IRefre
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.layout_swipe_refresh);
         mListView = (ListView) view.findViewById(R.id.list_view);
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mIsRefresh = true;
-                if (mRefreshListener != null){
-                    mRefreshListener.onRefresh();
-                }
-            }
-        });
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {

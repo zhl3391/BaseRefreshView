@@ -43,6 +43,15 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout implements IBa
     @Override
     public void setRefreshListener(RefreshListener refreshListener) {
         mRefreshListener = refreshListener;
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mIsRefresh = true;
+                if (mRefreshListener != null){
+                    mRefreshListener.onRefresh();
+                }
+            }
+        });
     }
 
     @Override
@@ -57,6 +66,7 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout implements IBa
         mIsRefresh = true;
     }
 
+    @Override
     public void setPlaceHolderView(@NonNull IPlaceHolderView placeHolderView) {
         if (mPlaceHolderView != null) {
             this.removeView(mPlaceHolderView.getView());
@@ -127,7 +137,14 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout implements IBa
         mSwipeRefreshLayout.setRefreshing(false);
         mSwipeRefreshLayout.setVisibility(View.GONE);
         if (mPlaceHolderView != null) {
-            mPlaceHolderView.showLoading();
+            mSwipeRefreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mPlaceHolderView.showLoading();
+                }
+            }, 300);
         }
     }
+
+
 }

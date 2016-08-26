@@ -46,6 +46,9 @@ public class PlaceHolderView implements IPlaceHolderView {
     public void showLoading() {
         mRootView.setVisibility(View.VISIBLE);
         mLayoutLoading.setVisibility(View.VISIBLE);
+        mLayoutLoading.setScaleX(0);
+        mLayoutLoading.setScaleY(0);
+        mLayoutLoading.animate().scaleX(1).scaleY(1).setDuration(300).start();
         mLayoutEmpty.setVisibility(View.GONE);
         mLayoutError.setVisibility(View.GONE);
     }

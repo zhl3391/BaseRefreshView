@@ -29,7 +29,7 @@ public class SRListViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_view);
         ButterKnife.bind(this);
 
-        ListView listView = mSwipeRefreshListView.getListView();
+        final ListView listView = mSwipeRefreshListView.getListView();
 
         PlaceHolderView placeHolderView = new PlaceHolderView(this);
 
@@ -50,7 +50,7 @@ public class SRListViewActivity extends AppCompatActivity {
         });
         mSwipeRefreshListView.setLoadMoreView(new LoadMoreView(this), false);
         mSwipeRefreshListView.setPlaceHolderView(placeHolderView);
-        listView.setAdapter(adapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -91,8 +91,9 @@ public class SRListViewActivity extends AppCompatActivity {
         mSwipeRefreshListView.postDelayed(new Runnable() {
             @Override
             public void run() {
+                listView.setAdapter(adapter);
                 mSwipeRefreshListView.showList(true);
             }
-        }, 1000);
+        }, 2000);
     }
 }

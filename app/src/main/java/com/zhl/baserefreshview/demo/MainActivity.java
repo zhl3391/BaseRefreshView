@@ -15,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static List<String> sTextList = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -34,16 +34,6 @@ public class SwipeRefreshGridView extends BaseSwipeRefreshView implements IRefre
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.layout_swipe_refresh);
         mGridView = (GridViewWithHeadFoot) view.findViewById(R.id.grid_view);
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mIsRefresh = true;
-                if (mRefreshListener != null){
-                    mRefreshListener.onRefresh();
-                }
-            }
-        });
-
         mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {

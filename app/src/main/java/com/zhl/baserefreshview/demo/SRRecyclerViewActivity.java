@@ -51,6 +51,17 @@ public class SRRecyclerViewActivity extends AppCompatActivity {
         mSrRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mSrRecyclerView.setAdapter(adapter);
 
+        adapter.setOnItemClickListener(new CommonRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (textList.get(position).equals("click to show error")) {
+                    mSrRecyclerView.showError();
+                } else if (textList.get(position).equals("click to show empty")) {
+                    mSrRecyclerView.showEmpty();
+                }
+            }
+        });
+
         mSrRecyclerView.setRefreshListener(new RefreshListener() {
             @Override
             public void onRefresh() {

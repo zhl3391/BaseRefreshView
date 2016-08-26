@@ -56,8 +56,17 @@ public class SwipeRefreshRecyclerView extends RelativeLayout implements IRefresh
     }
 
     @Override
-    public void setRefreshListener(RefreshListener refreshListener) {
+    public void setRefreshListener(final RefreshListener refreshListener) {
         mRefreshListener = refreshListener;
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mIsRefresh = true;
+                if (mRefreshListener != null) {
+                    mRefreshListener.onRefresh();
+                }
+            }
+        });
     }
 
     @Override
@@ -179,7 +188,12 @@ public class SwipeRefreshRecyclerView extends RelativeLayout implements IRefresh
         mSwipeRefreshLayout.setRefreshing(false);
         mSwipeRefreshLayout.setVisibility(View.GONE);
         if (mPlaceHolderView != null) {
-            mPlaceHolderView.showLoading();
+            mSwipeRefreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mPlaceHolderView.showLoading();
+                }
+            }, 300);
         }
     }
 }
