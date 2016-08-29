@@ -24,7 +24,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.1.1'
-    compile project(':baserefreshview')
+//    compile project(':baserefreshview')
+    compile 'com.github.zhl3391:BaseRefreshView:0.0.1'
     compile 'com.android.support:recyclerview-v7:24.1.1'
     compile 'com.jakewharton:butterknife:8.2.1'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
