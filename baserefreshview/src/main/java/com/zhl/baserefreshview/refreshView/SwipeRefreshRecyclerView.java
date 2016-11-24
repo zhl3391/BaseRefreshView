@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.widget.AbsListView;
 
@@ -16,6 +17,8 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
     private RecyclerView mRecyclerView;
     private MoreViewHolder mMoreViewHolder;
     private CommonRecyclerAdapter mAdapter;
+
+    private boolean mIsSetMoreViewHolder;
 
     public SwipeRefreshRecyclerView(Context context) {
         super(context);
@@ -40,35 +43,35 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
         return null;
     }
 
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
+
     public void setAdapter(@NonNull CommonRecyclerAdapter adapter) {
         mAdapter = adapter;
-        if (mMoreViewHolder != null){
-            mAdapter.addFooter(mMoreViewHolder);
-        }
         mRecyclerView.setAdapter(mAdapter);
+        if (!mIsSetMoreViewHolder && mMoreViewHolder != null) {
+            mAdapter.addFooter(mMoreViewHolder);
+            mIsSetMoreViewHolder = true;
+        }
     }
 
     public void setMoreViewHolder(@NonNull MoreViewHolder moreViewHolder) {
         mMoreViewHolder = moreViewHolder;
+        if (!mIsSetMoreViewHolder && mAdapter != null) {
+            mAdapter.addFooter(mMoreViewHolder);
+            mIsSetMoreViewHolder = true;
+        }
     }
 
-    public void setLayoutManager(@NonNull final RecyclerView.LayoutManager layoutManager) {
+    public void setLayoutManager(@NonNull final RecyclerView.LayoutManager layoutManager,
+                                 GridLayoutManager.SpanSizeLookup spanSizeLookup) {
         mRecyclerView.setLayoutManager(layoutManager);
         if (layoutManager instanceof GridLayoutManager) {
             final GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
-            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    if (mAdapter != null && mAdapter.getFooterSize() != 0) {
-                        if (position == mAdapter.getItemCount() - 1) {
-                            return gridLayoutManager.getSpanCount();
-                        } else {
-                            return 1;
-                        }
-                    }
-                    return 1;
-                }
-            });
+            if (spanSizeLookup != null) {
+                gridLayoutManager.setSpanSizeLookup(spanSizeLookup);
+            }
         }
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -77,6 +80,16 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
                 int lastPosition = 0;
                 if (layoutManager instanceof LinearLayoutManager) {
                     lastPosition = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+                } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+                    StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
+                    int[] lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
+                    staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
+                    lastPosition = lastPositions[0];
+                    for (int lastPositionTmp : lastPositions) {
+                        if (lastPosition < lastPositionTmp) {
+                            lastPosition = lastPositionTmp;
+                        }
+                    }
                 }
 
                 if (!mIsLoading
@@ -89,6 +102,25 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
                         mRefreshListener.onLoadMore();
                     }
                 }
+            }
+        });
+    }
+
+    public void setLayoutManager(@NonNull final RecyclerView.LayoutManager layoutManager) {
+        setLayoutManager(layoutManager, new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (layoutManager instanceof GridLayoutManager) {
+                    GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+                    if (mAdapter != null && mAdapter.getFooterSize() != 0) {
+                        if (position == mAdapter.getItemCount() - 1) {
+                            return gridLayoutManager.getSpanCount();
+                        } else {
+                            return 1;
+                        }
+                    }
+                }
+                return 1;
             }
         });
     }

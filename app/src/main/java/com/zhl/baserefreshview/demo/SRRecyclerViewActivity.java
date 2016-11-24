@@ -4,10 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
-import com.zhl.baserefreshview.MoreViewHolder;
 import com.zhl.baserefreshview.refreshView.RefreshListener;
 import com.zhl.baserefreshview.refreshView.SwipeRefreshRecyclerView;
 import com.zhl.commonadapter.BaseViewHolder;
@@ -49,8 +48,9 @@ public class SRRecyclerViewActivity extends AppCompatActivity {
 
         mSrRecyclerView.setPlaceHolderView(placeHolderView);
         mSrRecyclerView.setMoreViewHolder(new LoadMoreViewHolder());
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        mSrRecyclerView.setLayoutManager(gridLayoutManager);
+        mSrRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         mSrRecyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new CommonRecyclerAdapter.OnItemClickListener() {
@@ -98,5 +98,4 @@ public class SRRecyclerViewActivity extends AppCompatActivity {
             }
         }, 1000);
     }
-
 }

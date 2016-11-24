@@ -1,5 +1,6 @@
 package com.zhl.baserefreshview.demo;
 
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,6 +27,10 @@ public class LoadMoreViewHolder extends MoreViewHolder {
     public void bindView(View view) {
         super.bindView(view);
         ButterKnife.bind(this, view);
+        if (view.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
+            StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+            layoutParams.setFullSpan(true);
+        }
     }
 
     @Override

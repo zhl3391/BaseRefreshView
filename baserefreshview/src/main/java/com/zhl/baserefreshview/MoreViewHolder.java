@@ -25,9 +25,9 @@ public abstract class MoreViewHolder extends BaseViewHolder<MoreViewHolder.LoadM
 
     public static class LoadMore {
 
-        public static final int SHOW_LOADING = 0;
-        public static final int SHOW_NO_MORE = 1;
-        public static final int SHOW_ERROR   = 2;
+        public static final int SHOW_LOADING = 1;
+        public static final int SHOW_NO_MORE = 2;
+        public static final int SHOW_ERROR   = 3;
 
         public int showWhat;
 
