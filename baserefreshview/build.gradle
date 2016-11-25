@@ -26,5 +26,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     provided 'com.android.support:appcompat-v7:24.2.1'
     provided 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.zhl.commonadapter:commonadapter:0.2.3'
+    compile 'com.zhl.commonadapter:commonadapter:0.2.5'
 }

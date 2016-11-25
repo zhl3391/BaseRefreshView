@@ -51,7 +51,7 @@ public class SRGridViewActivity extends AppCompatActivity {
         });
         mSrGridView.setLoadMoreView(new LoadMoreView(this), false);
         mSrGridView.setPlaceHolderView(placeHolderView);
-        gridView.setAdapter(adapter);
+        mSrGridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

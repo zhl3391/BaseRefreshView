@@ -133,9 +133,9 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
             }else {
                 mMoreViewHolder.showNoMore();
             }
-            if (mAdapter != null){
-                mAdapter.notifyDataSetChanged();
-            }
+        }
+        if (mAdapter != null){
+            mAdapter.notifyDataSetChanged();
         }
     }
 

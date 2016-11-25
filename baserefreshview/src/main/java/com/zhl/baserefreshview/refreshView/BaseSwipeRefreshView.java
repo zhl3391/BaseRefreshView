@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 
 import com.zhl.baserefreshview.IPlaceHolderView;
@@ -18,6 +19,9 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
     protected IPlaceHolderView mPlaceHolderView;
     protected ILoadMoreView mLoadMoreView;
     protected AbsListView.OnScrollListener mOnScrollListener;
+    protected BaseAdapter mBaseAdapter;
+
+    private AbsListView mAbsListView;
 
     protected boolean mIsLoading;
     protected boolean mIsHasMore;
@@ -42,9 +46,9 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
         this.isInEditMode();
         mSwipeRefreshLayout = new SwipeRefreshLayout(getContext());
         this.addView(mSwipeRefreshLayout, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        AbsListView absListView = addAbsListView();
-        if (absListView != null) {
-            absListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        mAbsListView = addAbsListView();
+        if (mAbsListView != null) {
+            mAbsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {
                     if (!mIsLoading
@@ -74,6 +78,11 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
     }
 
     protected abstract AbsListView addAbsListView();
+
+    public void setAdapter(@NonNull BaseAdapter adapter) {
+        mBaseAdapter = adapter;
+        mAbsListView.setAdapter(adapter);
+    }
 
     public void setRefreshListener(RefreshListener refreshListener) {
         mRefreshListener = refreshListener;
@@ -130,6 +139,10 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
             }else {
                 mLoadMoreView.showNoMore();
             }
+        }
+
+        if (mBaseAdapter != null) {
+            mBaseAdapter.notifyDataSetChanged();
         }
     }
 

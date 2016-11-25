@@ -10,8 +10,7 @@ public class TextViewHolder extends BaseViewHolder<String> {
     TextView mTvText;
 
     @Override
-    public void bindView(View view) {
-        super.bindView(view);
+    public void findView(View view) {
         mTvText = (TextView) view.findViewById(R.id.tv_text);
     }
 

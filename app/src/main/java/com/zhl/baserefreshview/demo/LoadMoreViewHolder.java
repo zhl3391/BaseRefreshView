@@ -24,8 +24,7 @@ public class LoadMoreViewHolder extends MoreViewHolder {
     }
 
     @Override
-    public void bindView(View view) {
-        super.bindView(view);
+    public void findView(View view) {
         ButterKnife.bind(this, view);
         if (view.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
             StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();

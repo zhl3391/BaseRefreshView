@@ -91,7 +91,7 @@ public class SRListViewActivity extends AppCompatActivity {
         mSwipeRefreshListView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                listView.setAdapter(adapter);
+                mSwipeRefreshListView.setAdapter(adapter);
                 mSwipeRefreshListView.showList(true);
             }
         }, 2000);
