@@ -33,18 +33,25 @@ public class LoadMoreView implements ILoadMoreView {
 
     @Override
     public void showLoading() {
+        mRootView.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
         mTvNoMore.setVisibility(View.GONE);
     }
 
     @Override
     public void showNoMore() {
+        mRootView.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
         mTvNoMore.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showError() {
+        mRootView.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void hide() {
+        mRootView.setVisibility(View.GONE);
     }
 }

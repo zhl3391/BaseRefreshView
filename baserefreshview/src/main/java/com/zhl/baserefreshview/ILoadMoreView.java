@@ -13,4 +13,6 @@ public interface ILoadMoreView {
     void showNoMore();
 
     void showError();
+
+    void hide();
 }

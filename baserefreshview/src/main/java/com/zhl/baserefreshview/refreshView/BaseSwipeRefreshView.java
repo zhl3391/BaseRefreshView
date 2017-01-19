@@ -58,8 +58,11 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
                         mIsLoading = true;
                         mIsRefresh = false;
                         if (mRefreshListener != null){
+                            mLoadMoreView.showLoading();
                             mRefreshListener.onLoadMore();
                         }
+                    } else if (!mIsHasMore) {
+                        showNoMore();
                     }
 
                     if (mOnScrollListener != null) {
@@ -90,6 +93,7 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
             @Override
             public void onRefresh() {
                 mIsRefresh = true;
+                mIsLoading = true;
                 if (mRefreshListener != null){
                     mRefreshListener.onRefresh();
                 }
@@ -134,10 +138,9 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
         }
 
         if (mLoadMoreView != null) {
-            if (isHasMore){
-                mLoadMoreView.showLoading();
-            }else {
-                mLoadMoreView.showNoMore();
+            mLoadMoreView.hide();
+            if (!isHasMore) {
+                showNoMore();
             }
         }
 
@@ -181,6 +184,14 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
                     mPlaceHolderView.showLoading();
                 }
             }, 300);
+        }
+    }
+
+    protected void showNoMore() {
+        if (mAbsListView.getFirstVisiblePosition() == 0) {
+            mLoadMoreView.hide();
+        } else {
+            mLoadMoreView.showNoMore();
         }
     }
 

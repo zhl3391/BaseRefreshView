@@ -34,22 +34,28 @@ public class LoadMoreViewHolder extends MoreViewHolder {
 
     @Override
     public void updateView(LoadMore data, int position) {
-        switch (mLoadMore.showWhat) {
-            case LoadMore.SHOW_ERROR:
-                mTvError.setVisibility(View.VISIBLE);
-                mPbLoading.setVisibility(View.GONE);
-                mTvNoMore.setVisibility(View.GONE);
-                break;
-            case LoadMore.SHOW_LOADING:
-                mPbLoading.setVisibility(View.VISIBLE);
-                mTvError.setVisibility(View.GONE);
-                mTvNoMore.setVisibility(View.GONE);
-                break;
-            case LoadMore.SHOW_NO_MORE:
-                mTvNoMore.setVisibility(View.VISIBLE);
-                mPbLoading.setVisibility(View.GONE);
-                mTvError.setVisibility(View.GONE);
-                break;
+        if (mItemView != null) {
+            mItemView.setVisibility(View.VISIBLE);
+            switch (mLoadMore.showWhat) {
+                case LoadMore.SHOW_ERROR:
+                    mTvError.setVisibility(View.VISIBLE);
+                    mPbLoading.setVisibility(View.GONE);
+                    mTvNoMore.setVisibility(View.GONE);
+                    break;
+                case LoadMore.SHOW_LOADING:
+                    mPbLoading.setVisibility(View.VISIBLE);
+                    mTvError.setVisibility(View.GONE);
+                    mTvNoMore.setVisibility(View.GONE);
+                    break;
+                case LoadMore.SHOW_NO_MORE:
+                    mTvNoMore.setVisibility(View.VISIBLE);
+                    mPbLoading.setVisibility(View.GONE);
+                    mTvError.setVisibility(View.GONE);
+                    break;
+                case LoadMore.HIDE:
+                    mItemView.setVisibility(View.GONE);
+                    break;
+            }
         }
     }
 

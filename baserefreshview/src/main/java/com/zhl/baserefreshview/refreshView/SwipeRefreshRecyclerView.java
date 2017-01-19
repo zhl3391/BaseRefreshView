@@ -77,20 +77,7 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                int lastPosition = 0;
-                if (layoutManager instanceof LinearLayoutManager) {
-                    lastPosition = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
-                } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                    StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
-                    int[] lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
-                    staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
-                    lastPosition = lastPositions[0];
-                    for (int lastPositionTmp : lastPositions) {
-                        if (lastPosition < lastPositionTmp) {
-                            lastPosition = lastPositionTmp;
-                        }
-                    }
-                }
+                int lastPosition = getLastPosition();
 
                 if (!mIsLoading
                         && mIsHasMore
@@ -98,9 +85,12 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
                         && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     mIsLoading = true;
                     mIsRefresh = false;
-                    if (mRefreshListener != null){
+                    if (mRefreshListener != null) {
+                        mMoreViewHolder.showLoading();
                         mRefreshListener.onLoadMore();
                     }
+                } else if (!mIsHasMore) {
+                    showNoMore();
                 }
             }
         });
@@ -125,13 +115,61 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
         });
     }
 
+    private int getFirstPosition() {
+        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+        int firstPosition = 0;
+        if (layoutManager instanceof LinearLayoutManager) {
+            firstPosition = ((LinearLayoutManager)layoutManager).findFirstVisibleItemPosition();
+        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+            StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
+            int[] firstPositions = new int[staggeredGridLayoutManager.getSpanCount()];
+            staggeredGridLayoutManager.findFirstVisibleItemPositions(firstPositions);
+            firstPosition = firstPositions[0];
+            for (int firstPositionTmp : firstPositions) {
+                if (firstPosition > firstPositionTmp) {
+                    firstPosition = firstPositionTmp;
+                }
+            }
+        }
+
+        return firstPosition;
+    }
+
+    private int getLastPosition() {
+        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+        int lastPosition = 0;
+        if (layoutManager instanceof LinearLayoutManager) {
+            lastPosition = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+            StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
+            int[] lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
+            staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
+            lastPosition = lastPositions[0];
+            for (int lastPositionTmp : lastPositions) {
+                if (lastPosition < lastPositionTmp) {
+                    lastPosition = lastPositionTmp;
+                }
+            }
+        }
+
+        return lastPosition;
+    }
+
+    @Override
+    protected void showNoMore() {
+        if (getFirstPosition() == 0) {
+            mMoreViewHolder.hide();
+        } else {
+            mMoreViewHolder.showNoMore();
+        }
+    }
+
     public void showList(boolean isHasMore) {
         super.showList(isHasMore);
         if (mMoreViewHolder != null){
-            if (mIsHasMore){
-                mMoreViewHolder.showLoading();
-            }else {
-                mMoreViewHolder.showNoMore();
+            mMoreViewHolder.hide();
+            if (!isHasMore) {
+               showNoMore();
             }
         }
         if (mAdapter != null){
