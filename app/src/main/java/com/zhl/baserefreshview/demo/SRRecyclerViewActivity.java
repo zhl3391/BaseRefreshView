@@ -7,8 +7,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
-import com.zhl.baserefreshview.refreshView.RefreshListener;
-import com.zhl.baserefreshview.refreshView.SwipeRefreshRecyclerView;
+import com.zhl.baserefreshview.refreshView.base.RefreshListener;
+import com.zhl.baserefreshview.refreshView.SwipeRefreshLayout.SwipeRefreshRecyclerView;
 import com.zhl.commonadapter.BaseViewHolder;
 import com.zhl.commonadapter.CommonRecyclerAdapter;
 

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.btn_list_view, R.id.btn_recycler_view, R.id.btn_grid_view})
+    @OnClick({R.id.btn_list_view, R.id.btn_recycler_view, R.id.btn_grid_view, R.id.btn_ptr_list_view})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_list_view:
@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn_grid_view:
                 startActivity(new Intent(this, SRGridViewActivity.class));
+                break;
+            case R.id.btn_ptr_list_view:
+                startActivity(new Intent(this, PtrListViewActivity.class));
                 break;
         }
     }

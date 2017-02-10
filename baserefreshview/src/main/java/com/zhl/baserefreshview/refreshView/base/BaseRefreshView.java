@@ -1,8 +1,7 @@
-package com.zhl.baserefreshview.refreshView;
+package com.zhl.baserefreshview.refreshView.base;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AbsListView;
@@ -12,14 +11,14 @@ import android.widget.RelativeLayout;
 import com.zhl.baserefreshview.IPlaceHolderView;
 import com.zhl.baserefreshview.ILoadMoreView;
 
-public abstract class BaseSwipeRefreshView extends RelativeLayout {
+public abstract class BaseRefreshView extends RelativeLayout {
 
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected RefreshListener mRefreshListener;
     protected IPlaceHolderView mPlaceHolderView;
     protected ILoadMoreView mLoadMoreView;
     protected AbsListView.OnScrollListener mOnScrollListener;
     protected BaseAdapter mBaseAdapter;
+    protected RefreshLayoutInterface mRefreshLayout;
 
     private AbsListView mAbsListView;
 
@@ -27,25 +26,23 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
     protected boolean mIsHasMore;
     protected boolean mIsRefresh = true;
 
-    public BaseSwipeRefreshView(Context context) {
-        super(context);
-        init();
+    public BaseRefreshView(Context context) {
+        this(context, null, 0);
     }
 
-    public BaseSwipeRefreshView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+    public BaseRefreshView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
-    public BaseSwipeRefreshView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BaseRefreshView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     protected void init() {
         this.isInEditMode();
-        mSwipeRefreshLayout = new SwipeRefreshLayout(getContext());
-        this.addView(mSwipeRefreshLayout, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        mRefreshLayout = createRefreshLayout();
+        this.addView(mRefreshLayout.getSelf(), LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mAbsListView = addAbsListView();
         if (mAbsListView != null) {
             mAbsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -82,6 +79,8 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
 
     protected abstract AbsListView addAbsListView();
 
+    protected abstract RefreshLayoutInterface createRefreshLayout();
+
     public void setAdapter(@NonNull BaseAdapter adapter) {
         mBaseAdapter = adapter;
         mAbsListView.setAdapter(adapter);
@@ -89,12 +88,12 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
 
     public void setRefreshListener(RefreshListener refreshListener) {
         mRefreshListener = refreshListener;
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mRefreshLayout.setOnRefreshListener(new RefreshLayoutInterface.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mIsRefresh = true;
                 mIsLoading = true;
-                if (mRefreshListener != null){
+                mIsRefresh = true;
+                if (mRefreshListener != null) {
                     mRefreshListener.onRefresh();
                 }
             }
@@ -102,11 +101,11 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
     }
 
     public void setRefreshEnable(boolean refreshEnable) {
-        mSwipeRefreshLayout.setEnabled(refreshEnable);
+        mRefreshLayout.setRefreshEnable(refreshEnable);
     }
 
     public void setRefreshing(boolean isRefreshing) {
-        mSwipeRefreshLayout.setRefreshing(isRefreshing);
+        mRefreshLayout.setRefreshing(isRefreshing);
         mIsLoading = true;
         mIsRefresh = true;
     }
@@ -123,13 +122,13 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
         mOnScrollListener = onScrollListener;
     }
 
-    public SwipeRefreshLayout getSwipeRefreshLayout() {
-        return mSwipeRefreshLayout;
+    public RefreshLayoutInterface getRefreshLayout() {
+        return mRefreshLayout;
     }
 
     public void showList(boolean isHasMore) {
-        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-        mSwipeRefreshLayout.setRefreshing(false);
+        mRefreshLayout.setVisibility(View.VISIBLE);
+        mRefreshLayout.setRefreshing(false);
         mIsLoading = false;
         mIsHasMore = isHasMore;
 
@@ -151,8 +150,8 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
 
     public void showEmpty() {
         mIsLoading = false;
-        mSwipeRefreshLayout.setRefreshing(false);
-        mSwipeRefreshLayout.setVisibility(View.GONE);
+        mRefreshLayout.setRefreshing(false);
+        mRefreshLayout.setVisibility(View.GONE);
         if (mPlaceHolderView != null) {
             mPlaceHolderView.showEmpty();
         }
@@ -161,8 +160,8 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
     public void showError() {
         if (mIsRefresh) {
             mIsLoading = false;
-            mSwipeRefreshLayout.setRefreshing(false);
-            mSwipeRefreshLayout.setVisibility(View.GONE);
+            mRefreshLayout.setRefreshing(false);
+            mRefreshLayout.setVisibility(View.GONE);
             if (mPlaceHolderView != null) {
                 mPlaceHolderView.showError();
             }
@@ -175,10 +174,10 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
 
     public void showLoading() {
         mIsLoading = true;
-        mSwipeRefreshLayout.setRefreshing(false);
-        mSwipeRefreshLayout.setVisibility(View.GONE);
+        mRefreshLayout.setRefreshing(false);
+        mRefreshLayout.setVisibility(View.GONE);
         if (mPlaceHolderView != null) {
-            mSwipeRefreshLayout.postDelayed(new Runnable() {
+            postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     mPlaceHolderView.showLoading();
@@ -194,6 +193,4 @@ public abstract class BaseSwipeRefreshView extends RelativeLayout {
             mLoadMoreView.showNoMore();
         }
     }
-
-
 }

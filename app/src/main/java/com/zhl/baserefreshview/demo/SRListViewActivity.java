@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.zhl.baserefreshview.refreshView.RefreshListener;
-import com.zhl.baserefreshview.refreshView.SwipeRefreshListView;
+import com.zhl.baserefreshview.refreshView.base.RefreshListener;
+import com.zhl.baserefreshview.refreshView.SwipeRefreshLayout.SwipeRefreshListView;
 import com.zhl.commonadapter.BaseViewHolder;
 import com.zhl.commonadapter.CommonAdapter;
 

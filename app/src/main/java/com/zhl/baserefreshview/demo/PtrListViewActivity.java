@@ -5,10 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.ListView;
 
 import com.zhl.baserefreshview.refreshView.base.RefreshListener;
-import com.zhl.baserefreshview.refreshView.SwipeRefreshLayout.SwipeRefreshGridView;
 import com.zhl.commonadapter.BaseViewHolder;
 import com.zhl.commonadapter.CommonAdapter;
 
@@ -17,20 +16,35 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
 
-public class SRGridViewActivity extends AppCompatActivity {
+/**
+ * Created by zhouhl on 2017/1/21.
+ * PtrListViewActivity
+ */
 
-    @BindView(R.id.sr_grid_view)
-    SwipeRefreshGridView mSrGridView;
+public class PtrListViewActivity extends AppCompatActivity {
+
+    @BindView(R.id.ptr_refresh_list_view)
+    PtrRefreshListView mPtrRefreshListView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_grid_view);
+        setContentView(R.layout.activity_ptr_list_view);
         ButterKnife.bind(this);
 
-        GridView gridView = mSrGridView.getGridView();
-        gridView.setNumColumns(2);
+        final PtrRefreshLayout ptrRefreshLayout = (PtrRefreshLayout) mPtrRefreshListView.getRefreshLayout();
+        ptrRefreshLayout.setResistance(1.7f);
+        ptrRefreshLayout.setRatioOfHeaderHeightToRefresh(1.2f);
+        ptrRefreshLayout.setDurationToClose(200);
+        ptrRefreshLayout.setDurationToCloseHeader(1000);
+        ptrRefreshLayout.setPullToRefresh(false);
+        ptrRefreshLayout.setKeepHeaderWhenRefresh(true);
+
+        final ListView listView = mPtrRefreshListView.getListView();
 
         PlaceHolderView placeHolderView = new PlaceHolderView(this);
 
@@ -46,55 +60,55 @@ public class SRGridViewActivity extends AppCompatActivity {
         placeHolderView.getView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSrGridView.showList(true);
+                mPtrRefreshListView.showList(true);
             }
         });
-        mSrGridView.setLoadMoreView(new LoadMoreView(this), false);
-        mSrGridView.setPlaceHolderView(placeHolderView);
-        mSrGridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mPtrRefreshListView.setLoadMoreView(new LoadMoreView(this), false);
+        mPtrRefreshListView.setPlaceHolderView(placeHolderView);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (textList.get(i).equals("click to show error")) {
-                    mSrGridView.showError();
+                    mPtrRefreshListView.showError();
                 } else if (textList.get(i).equals("click to show empty")) {
-                    mSrGridView.showEmpty();
+                    mPtrRefreshListView.showEmpty();
                 }
             }
         });
-        mSrGridView.setRefreshListener(new RefreshListener() {
+        mPtrRefreshListView.setRefreshListener(new RefreshListener() {
             @Override
             public void onRefresh() {
-                mSrGridView.postDelayed(new Runnable() {
+                mPtrRefreshListView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         textList.add(0, "test-refresh");
                         adapter.notifyDataSetChanged();
-                        mSrGridView.showList(true);
+                        mPtrRefreshListView.showList(true);
                     }
                 }, 1000);
             }
 
             @Override
             public void onLoadMore() {
-                mSrGridView.postDelayed(new Runnable() {
+                mPtrRefreshListView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         textList.add("test-more");
-                        textList.add("test-more");
                         adapter.notifyDataSetChanged();
-                        mSrGridView.showList(false);
+                        mPtrRefreshListView.showList(false);
                     }
                 }, 1000);
             }
         });
 
-        mSrGridView.showLoading();
-        mSrGridView.postDelayed(new Runnable() {
+        mPtrRefreshListView.showLoading();
+        mPtrRefreshListView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mSrGridView.showList(true);
+                mPtrRefreshListView.setAdapter(adapter);
+                mPtrRefreshListView.showList(true);
             }
-        }, 1000);
+        }, 2000);
     }
 }

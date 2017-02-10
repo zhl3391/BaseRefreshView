@@ -1,4 +1,4 @@
-package com.zhl.baserefreshview.refreshView;
+package com.zhl.baserefreshview.refreshView.base;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,7 +12,12 @@ import android.widget.AbsListView;
 import com.zhl.baserefreshview.MoreViewHolder;
 import com.zhl.commonadapter.CommonRecyclerAdapter;
 
-public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
+/**
+ * Created by zhouhl on 2017/1/21.
+ * BaseRefreshRecyclerView
+ */
+
+public abstract class BaseRefreshRecyclerView extends BaseRefreshView {
 
     private RecyclerView mRecyclerView;
     private MoreViewHolder mMoreViewHolder;
@@ -20,31 +25,31 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
 
     private boolean mIsSetMoreViewHolder;
 
-    public SwipeRefreshRecyclerView(Context context) {
+    public BaseRefreshRecyclerView(Context context) {
         super(context);
     }
 
-    public SwipeRefreshRecyclerView(Context context, AttributeSet attrs) {
+    public BaseRefreshRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SwipeRefreshRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BaseRefreshRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     protected void init(){
         super.init();
         mRecyclerView = new RecyclerView(getContext());
-        mSwipeRefreshLayout.addView(mRecyclerView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        mRefreshLayout.getSelf().addView(mRecyclerView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    }
+
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
     }
 
     @Override
     protected AbsListView addAbsListView() {
         return null;
-    }
-
-    public RecyclerView getRecyclerView() {
-        return mRecyclerView;
     }
 
     public void setAdapter(@NonNull CommonRecyclerAdapter adapter) {
@@ -169,7 +174,7 @@ public class SwipeRefreshRecyclerView extends BaseSwipeRefreshView {
         if (mMoreViewHolder != null){
             mMoreViewHolder.hide();
             if (!isHasMore) {
-               showNoMore();
+                showNoMore();
             }
         }
         if (mAdapter != null){

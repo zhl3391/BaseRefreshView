@@ -23,6 +23,9 @@
                   android:label="SRListViewActivity"/>
         <activity android:name=".SRGridViewActivity"
                   android:label="SRGridViewActivity"/>
+
+        <activity android:name=".PtrListViewActivity"
+                  android:label="PtrListViewActivity"/>
     </application>
 
 </manifest>

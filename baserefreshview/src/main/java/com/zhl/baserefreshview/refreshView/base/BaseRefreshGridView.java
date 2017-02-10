@@ -1,4 +1,4 @@
-package com.zhl.baserefreshview.refreshView;
+package com.zhl.baserefreshview.refreshView.base;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,29 +8,33 @@ import android.widget.AbsListView;
 import com.zhl.baserefreshview.GridViewWithHeadFoot;
 import com.zhl.baserefreshview.ILoadMoreView;
 
-public class SwipeRefreshGridView extends BaseSwipeRefreshView {
+/**
+ * Created by zhouhl on 2017/1/21.
+ * BaseRefreshGridView
+ */
+
+public abstract class BaseRefreshGridView extends BaseRefreshView {
 
     private GridViewWithHeadFoot mGridView;
 
-    public SwipeRefreshGridView(Context context) {
+    public BaseRefreshGridView(Context context) {
         super(context);
     }
 
-    public SwipeRefreshGridView(Context context, AttributeSet attrs) {
+    public BaseRefreshGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SwipeRefreshGridView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BaseRefreshGridView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
     protected AbsListView addAbsListView() {
         mGridView = new GridViewWithHeadFoot(getContext());
-        mSwipeRefreshLayout.addView(mGridView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        mRefreshLayout.getSelf().addView(mGridView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         return mGridView;
     }
-
 
     public GridViewWithHeadFoot getGridView() {
         return mGridView;
