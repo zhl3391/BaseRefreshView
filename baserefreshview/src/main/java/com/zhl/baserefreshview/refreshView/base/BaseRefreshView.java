@@ -55,7 +55,9 @@ public abstract class BaseRefreshView extends RelativeLayout {
                         mIsLoading = true;
                         mIsRefresh = false;
                         if (mRefreshListener != null){
-                            mLoadMoreView.showLoading();
+                            if (mLoadMoreView != null) {
+                                mLoadMoreView.showLoading();
+                            }
                             mRefreshListener.onLoadMore();
                         }
                     } else if (!mIsHasMore) {
@@ -187,10 +189,12 @@ public abstract class BaseRefreshView extends RelativeLayout {
     }
 
     protected void showNoMore() {
-        if (mAbsListView.getFirstVisiblePosition() == 0) {
-            mLoadMoreView.hide();
-        } else {
-            mLoadMoreView.showNoMore();
+        if (mLoadMoreView != null) {
+            if (mAbsListView.getFirstVisiblePosition() == 0) {
+                mLoadMoreView.hide();
+            } else {
+                mLoadMoreView.showNoMore();
+            }
         }
     }
 }
