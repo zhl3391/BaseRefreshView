@@ -91,7 +91,9 @@ public abstract class BaseRefreshRecyclerView extends BaseRefreshView {
                     mIsLoading = true;
                     mIsRefresh = false;
                     if (mRefreshListener != null) {
-                        mMoreViewHolder.showLoading();
+                        if (mMoreViewHolder != null) {
+                            mMoreViewHolder.showLoading();
+                        }
                         mRefreshListener.onLoadMore();
                     }
                 } else if (!mIsHasMore) {
