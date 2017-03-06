@@ -8,6 +8,7 @@ import com.zhl.baserefreshview.refreshView.base.RefreshLayoutInterface;
 
 public class SwipeRefreshRecyclerView extends BaseRefreshRecyclerView {
 
+    private XSwipeRefreshLayout mXSwipeRefreshLayout;
 
     public SwipeRefreshRecyclerView(Context context) {
         super(context);
@@ -23,7 +24,12 @@ public class SwipeRefreshRecyclerView extends BaseRefreshRecyclerView {
 
     @Override
     protected RefreshLayoutInterface createRefreshLayout() {
-        return new XSwipeRefreshLayout(getContext());
+        mXSwipeRefreshLayout = new XSwipeRefreshLayout(getContext());
+        return mXSwipeRefreshLayout;
+    }
+
+    public XSwipeRefreshLayout getXSwipeRefreshLayout() {
+        return mXSwipeRefreshLayout;
     }
 
 }
