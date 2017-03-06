@@ -165,7 +165,7 @@ public abstract class BaseRefreshRecyclerView extends BaseRefreshView {
     @Override
     protected void showNoMore() {
         if (mMoreViewHolder != null) {
-            if (getFirstPosition() == 0) {
+            if (getFirstPosition() <= 0) {
                 mMoreViewHolder.hide();
             } else {
                 mMoreViewHolder.showNoMore();

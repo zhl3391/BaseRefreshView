@@ -179,18 +179,13 @@ public abstract class BaseRefreshView extends RelativeLayout {
         mRefreshLayout.setRefreshing(false);
         mRefreshLayout.setVisibility(View.GONE);
         if (mPlaceHolderView != null) {
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mPlaceHolderView.showLoading();
-                }
-            }, 300);
+            mPlaceHolderView.showLoading();
         }
     }
 
     protected void showNoMore() {
         if (mLoadMoreView != null) {
-            if (mAbsListView.getFirstVisiblePosition() == 0) {
+            if (mAbsListView.getFirstVisiblePosition() <= 0) {
                 mLoadMoreView.hide();
             } else {
                 mLoadMoreView.showNoMore();
