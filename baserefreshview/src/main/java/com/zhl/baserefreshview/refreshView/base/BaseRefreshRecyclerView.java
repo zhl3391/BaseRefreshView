@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.AbsListView;
 
 import com.zhl.baserefreshview.MoreViewHolder;
@@ -22,6 +24,9 @@ public abstract class BaseRefreshRecyclerView extends BaseRefreshView {
     private RecyclerView mRecyclerView;
     private MoreViewHolder mMoreViewHolder;
     private CommonRecyclerAdapter mAdapter;
+    private float mDownY;
+
+    private boolean mIsUpPull;
 
     private boolean mIsSetMoreViewHolder;
 
@@ -40,6 +45,22 @@ public abstract class BaseRefreshRecyclerView extends BaseRefreshView {
     protected void init(){
         super.init();
         mRecyclerView = new RecyclerView(getContext());
+        mRecyclerView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        if (mDownY == 0) {
+                            mDownY = motionEvent.getY();
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mIsUpPull = (mDownY - motionEvent.getY()) > 0;
+                        break;
+                }
+                return false;
+            }
+        });
         mRefreshLayout.getSelf().addView(mRecyclerView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     }
 
@@ -85,6 +106,7 @@ public abstract class BaseRefreshRecyclerView extends BaseRefreshView {
                 int lastPosition = getLastPosition();
 
                 if (!mIsLoading
+                        && mIsUpPull
                         && mIsHasMore
                         && mAdapter.getItemCount() == (lastPosition + 1)
                         && newState == RecyclerView.SCROLL_STATE_IDLE) {
